@@ -19,7 +19,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     public List<Item> getUserItems(Integer userId) {
         return itemMap.values().stream()
-                .filter(item -> item.getOwner() == userId)
+                .filter(item -> item.getOwner().equals(userId))
                 .collect(Collectors.toList());
     }
 

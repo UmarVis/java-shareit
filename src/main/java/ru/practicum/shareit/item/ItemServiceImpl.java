@@ -52,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto update(Integer userId, ItemDto itemDto, Integer itemId) {
         Item item = itemRepository.getById(itemId);
-        if (item.getOwner() != userId) {
+        if (!item.getOwner().equals(userId)) {
             log.warn("Item with id: {} not belongs to user with id {}", itemId, userId);
             throw new ItemException(
                     String.format("Item with id: %s not belongs to user with id: %s", itemId, userId));
