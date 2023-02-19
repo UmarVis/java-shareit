@@ -10,10 +10,18 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class ItemDto {
     private Integer id;
-    @NotBlank
+    @NotBlank(groups = {Create.class})
     private String name;
-    @NotNull
+    @NotBlank(groups = {Create.class})
     private String description;
-    @NotNull
+    @NotNull(groups = {Create.class})
     private Boolean available;
+
+    public interface Create {
+
+    }
+
+    public interface Update {
+
+    }
 }

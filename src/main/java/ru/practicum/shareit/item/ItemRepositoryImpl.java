@@ -14,15 +14,18 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class ItemRepositoryImpl implements ItemRepository {
-    private Map<Integer, Item> itemMap = new HashMap<>();
+    private final Map<Integer, Item> itemMap = new HashMap<>();
     private Integer itemId = 1;
 
+    @Override
     public List<Item> getUserItems(Integer userId) {
+
         return itemMap.values().stream()
                 .filter(item -> item.getOwner().equals(userId))
                 .collect(Collectors.toList());
     }
 
+    @Override
     public Item getById(Integer id) {
         Optional<Item> item = Optional.ofNullable(itemMap.get(id));
         if (item.isPresent()) {
@@ -34,17 +37,15 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
     }
 
+    @Override
     public Item create(Item item) {
-        if (itemMap.containsKey(item.getId())) {
-            throw new ItemException(String.format("Item with id %s already exist", item.getId()));
-        }
-        if (item.getId() == null) {
-            item.setId(itemId++);
-        }
+        item.setId(itemId++);
         itemMap.put(item.getId(), item);
+
         return item;
     }
 
+    @Override
     public List<Item> searchItem(String word) {
         return itemMap.values().stream()
                 .filter(Item::getAvailable)
@@ -53,8 +54,8 @@ public class ItemRepositoryImpl implements ItemRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public Item deleteItem(Integer id) {
         return itemMap.remove(id);
     }
-
 }

@@ -2,12 +2,11 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import javax.validation.ValidationException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,69 +15,40 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceIml implements UserService {
     private final UserRepository userRepository;
+    private final UserMapper mapper;
 
+    @Override
     public UserDto add(UserDto userDto) {
-        return makeUserDto(userRepository.add(makeUser(userDto)));
+        return mapper.makeUserDto(userRepository.add(mapper.makeUser(userDto)));
     }
 
+    @Override
     public UserDto getById(Integer id) {
-        try {
-            userRepository.getById(id);
-        } catch (NullPointerException exception) {
-            throw new UserNotFoundException(String.format("User %s not found", id));
-        }
-        return makeUserDto(userRepository.getById(id));
+        return mapper.makeUserDto(userRepository.getById(id));
     }
 
+    @Override
     public UserDto update(UserDto userDto, Integer id) {
         checkEmail(userDto, id);
-        try {
-            userRepository.getById(id).getId();
-        } catch (NullPointerException e) {
-            throw new UserNotFoundException(String.format("User %s not found", id));
-        }
         User user = userRepository.getById(id);
-        userRepository.delete(id);
-        if (userDto.getName() != null) {
+        if (userDto.getName() != null && !(userDto.getName().isBlank())) {
             user.setName(userDto.getName());
         }
-        if (userDto.getEmail() != null) {
+        if (userDto.getEmail() != null && !(userDto.getEmail().isBlank())) {
             user.setEmail(userDto.getEmail());
         }
-        return makeUserDto(userRepository.update(user, id));
+        return mapper.makeUserDto(user);
     }
 
+    @Override
     public UserDto delete(Integer id) {
-        try {
-            userRepository.getById(id);
-        } catch (NullPointerException e) {
-            throw new UserNotFoundException(String.format("User %s not found", id));
-        }
-        return makeUserDto(userRepository.delete(id));
+        userRepository.getById(id);
+        return mapper.makeUserDto(userRepository.delete(id));
     }
 
+    @Override
     public List<UserDto> getAll() {
-        List<UserDto> usersList = new ArrayList<>();
-        for (User users : userRepository.getAll()) {
-            usersList.add(makeUserDto(users));
-        }
-        return usersList;
-    }
-
-    private User makeUser(UserDto userDto) {
-        return User.builder()
-                .id(userDto.getId())
-                .name(userDto.getName())
-                .email(userDto.getEmail())
-                .build();
-    }
-
-    private UserDto makeUserDto(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .build();
+        return userRepository.getAll().stream().map(mapper::makeUserDto).collect(Collectors.toList());
     }
 
     private void checkEmail(UserDto userDto, Integer id) {

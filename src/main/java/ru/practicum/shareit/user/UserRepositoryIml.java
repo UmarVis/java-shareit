@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 
 import javax.validation.ValidationException;
@@ -14,6 +15,7 @@ public class UserRepositoryIml implements UserRepository {
     private final Map<Integer, User> userMap = new HashMap<>();
     private Integer userId = 0;
 
+    @Override
     public User add(User user) {
         checkEmail(user);
         userId++;
@@ -23,21 +25,24 @@ public class UserRepositoryIml implements UserRepository {
         return userMap.get(userId);
     }
 
+    @Override
     public User getById(Integer id) {
-        log.info("User with ID {} was received", id);
-        return userMap.get(id);
+        Optional<User> user = Optional.ofNullable(userMap.get(id));
+        if (user.isPresent()) {
+            log.info("User with ID {} was received", id);
+            return user.get();
+        } else {
+            log.error("Id not found {} ", id);
+            throw new UserNotFoundException("User with id: " + id + " not found");
+        }
     }
 
+    @Override
     public List<User> getAll() {
         return new ArrayList<>(userMap.values());
     }
 
-    public User update(User user, Integer id) {
-        userMap.put(id, user);
-        log.info("User with id {} updated", id);
-        return userMap.get(id);
-    }
-
+    @Override
     public User delete(Integer id) {
         User deleteUser = userMap.get(id);
         userMap.remove(id);

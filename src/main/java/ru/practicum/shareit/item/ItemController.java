@@ -5,7 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 
-import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -15,8 +15,8 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") @NotNull Integer userId,
-                          @RequestBody @Validated ItemDto itemDto) {
+    public ItemDto create(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                          @RequestBody @Validated(ItemDto.Create.class) ItemDto itemDto) {
         return itemService.create(userId, itemDto);
     }
 
@@ -26,22 +26,25 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getUserItems(@RequestHeader("X-Sharer-User-Id") @NotNull Integer userId) {
+    public List<ItemDto> getUserItems(@RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemService.getUserItems(userId);
     }
 
     @PatchMapping("{id}")
-    public ItemDto update(@RequestHeader("X-Sharer-User-Id") @NotNull Integer userId,
-                          @RequestBody ItemDto itemDto, @PathVariable Integer id) {
+    public ItemDto update(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                          @RequestBody @Validated(ItemDto.Update.class) ItemDto itemDto, @PathVariable Integer id) {
         return itemService.update(userId, itemDto, id);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam(name = "text", defaultValue = "") String word) {
+    public List<ItemDto> searchItem(@RequestParam(name = "text") String word) {
+        if (word.isBlank()) {
+            return Collections.emptyList();
+        }
         return itemService.searchItem(word);
     }
 
-    @DeleteMapping
+    @DeleteMapping("{id}")
     public void delete(@PathVariable Integer id) {
         itemService.delete(id);
     }
