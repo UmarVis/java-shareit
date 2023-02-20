@@ -52,7 +52,7 @@ public class UserRepositoryIml implements UserRepository {
     public void checkEmail(User user) {
         List<User> userWithSameEmail = getAll()
                 .stream()
-                .filter(u -> u.getEmail().equals(user.getEmail()) && !Objects.equals(u.getId(), user.getId()))
+                .filter(u -> Objects.equals(u.getEmail(), user.getEmail()) && !Objects.equals(u.getId(), user.getId()))
                 .collect(Collectors.toList());
 
         if (!userWithSameEmail.isEmpty()) {

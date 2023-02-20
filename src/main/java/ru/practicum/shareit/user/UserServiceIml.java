@@ -6,9 +6,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
-import javax.validation.ValidationException;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +27,7 @@ public class UserServiceIml implements UserService {
 
     @Override
     public UserDto update(UserDto userDto, Integer id) {
-       checkEmail(userDto, id);
+        userRepository.checkEmail(mapper.makeUser(userDto));
         User user = userRepository.getById(id);
         if (userDto.getName() != null && !(userDto.getName().isBlank())) {
             user.setName(userDto.getName());
@@ -49,17 +47,6 @@ public class UserServiceIml implements UserService {
     @Override
     public List<UserDto> getAll() {
         return userRepository.getAll().stream().map(mapper::makeUserDto).collect(Collectors.toList());
-    }
-
-    private void checkEmail(UserDto userDto, Integer id) {
-        List<UserDto> userWithSameEmail = getAll()
-                .stream()
-                .filter(u -> u.getEmail().equals(userDto.getEmail()) && !Objects.equals(u.getId(), id))
-                .collect(Collectors.toList());
-
-        if (!userWithSameEmail.isEmpty()) {
-            throw new ValidationException("Пользователь с такой почтой уже есть");
-        }
     }
 }
 
