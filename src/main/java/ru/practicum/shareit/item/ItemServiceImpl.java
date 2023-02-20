@@ -70,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItem(String request) {
-        log.info("Searching item {}", request);
+        log.info("Searching item: {}", request);
         return itemRepository.searchItem(request).stream().
                 map(mapper::makeItemDto).collect(Collectors.toList());
     }
