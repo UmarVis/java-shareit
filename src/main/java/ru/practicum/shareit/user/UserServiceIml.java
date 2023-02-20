@@ -29,7 +29,7 @@ public class UserServiceIml implements UserService {
 
     @Override
     public UserDto update(UserDto userDto, Integer id) {
-        checkEmail(userDto, id);
+       checkEmail(userDto, id);
         User user = userRepository.getById(id);
         if (userDto.getName() != null && !(userDto.getName().isBlank())) {
             user.setName(userDto.getName());
@@ -54,8 +54,7 @@ public class UserServiceIml implements UserService {
     private void checkEmail(UserDto userDto, Integer id) {
         List<UserDto> userWithSameEmail = getAll()
                 .stream()
-                .filter(u -> u.getEmail().equals(userDto.getEmail()))
-                .filter(u -> !Objects.equals(u.getId(), id))
+                .filter(u -> u.getEmail().equals(userDto.getEmail()) && !Objects.equals(u.getId(), id))
                 .collect(Collectors.toList());
 
         if (!userWithSameEmail.isEmpty()) {

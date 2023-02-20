@@ -12,4 +12,6 @@ public interface UserRepository {
     List<User> getAll();
 
     User delete(Integer id);
+
+    void checkEmail(User user);
 }

@@ -8,7 +8,6 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,14 +26,12 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item getById(Integer id) {
-        Optional<Item> item = Optional.ofNullable(itemMap.get(id));
-        if (item.isPresent()) {
-            log.info("Item with ID {} was found", id);
-            return item.get();
-        } else {
+        if (id == null) {
             log.error("Item ID not found {} ", id);
             throw new ItemException(String.format("Item with id: %s not found", id));
         }
+        log.info("Item with ID {} was found", id);
+        return itemMap.get(id);
     }
 
     @Override

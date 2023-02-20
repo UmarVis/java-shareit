@@ -27,14 +27,12 @@ public class UserRepositoryIml implements UserRepository {
 
     @Override
     public User getById(Integer id) {
-        Optional<User> user = Optional.ofNullable(userMap.get(id));
-        if (user.isPresent()) {
-            log.info("User with ID {} was received", id);
-            return user.get();
-        } else {
+        if (userMap.get(id) == null) {
             log.error("Id not found {} ", id);
             throw new UserNotFoundException("User with id: " + id + " not found");
         }
+        log.info("User with ID {} was received", id);
+        return userMap.get(id);
     }
 
     @Override
@@ -50,11 +48,11 @@ public class UserRepositoryIml implements UserRepository {
         return deleteUser;
     }
 
-    private void checkEmail(User user) {
+    @Override
+    public void checkEmail(User user) {
         List<User> userWithSameEmail = getAll()
                 .stream()
-                .filter(u -> u.getEmail().equals(user.getEmail()))
-                .filter(u -> !Objects.equals(u.getId(), user.getId()))
+                .filter(u -> u.getEmail().equals(user.getEmail()) && !Objects.equals(u.getId(), user.getId()))
                 .collect(Collectors.toList());
 
         if (!userWithSameEmail.isEmpty()) {

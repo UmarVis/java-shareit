@@ -9,8 +9,8 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +23,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getUserItems(Integer userId) {
         userRepository.getById(userId);
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        itemRepository.getUserItems(userId).stream()
-                .forEach(item -> itemDtoList.add(mapper.makeItemDto(item)));
+        List<ItemDto> itemDtoList = itemRepository.getUserItems(userId).stream()
+                .map(mapper::makeItemDto).collect(Collectors.toList());
         log.info("User's with id: {} items: {}", userId, itemDtoList);
         return itemDtoList;
     }
@@ -71,10 +70,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItem(String request) {
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        itemRepository.searchItem(request).stream()
-                .forEach(item -> itemDtoList.add(mapper.makeItemDto(item)));
         log.info("Searching item {}", request);
+        List<ItemDto> itemDtoList = itemRepository.searchItem(request).stream().
+                map(mapper::makeItemDto).collect(Collectors.toList());
         return itemDtoList;
     }
 
