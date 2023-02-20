@@ -71,9 +71,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> searchItem(String request) {
         log.info("Searching item {}", request);
-        List<ItemDto> itemDtoList = itemRepository.searchItem(request).stream().
+        return itemRepository.searchItem(request).stream().
                 map(mapper::makeItemDto).collect(Collectors.toList());
-        return itemDtoList;
     }
 
     @Override
