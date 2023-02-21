@@ -17,7 +17,7 @@ public class UserRepositoryIml implements UserRepository {
 
     @Override
     public User add(User user) {
-        checkEmail(user);
+        checkEmail(user, user.getId());
         userId++;
         user.setId(userId);
         userMap.put(userId, user);
@@ -49,10 +49,10 @@ public class UserRepositoryIml implements UserRepository {
     }
 
     @Override
-    public void checkEmail(User user) {
+    public void checkEmail(User user, Integer id) {
         List<User> userWithSameEmail = getAll()
                 .stream()
-                .filter(u -> Objects.equals(u.getEmail(), user.getEmail()) && !Objects.equals(u.getId(), user.getId()))
+                .filter(u -> Objects.equals(u.getEmail(), user.getEmail()) && !Objects.equals(u.getId(), id))
                 .collect(Collectors.toList());
 
         if (!userWithSameEmail.isEmpty()) {

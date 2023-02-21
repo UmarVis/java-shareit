@@ -27,7 +27,7 @@ public class UserServiceIml implements UserService {
 
     @Override
     public UserDto update(UserDto userDto, Integer id) {
-        userRepository.checkEmail(mapper.makeUser(userDto));
+        userRepository.checkEmail(mapper.makeUser(userDto), id);
         User user = userRepository.getById(id);
         if (userDto.getName() != null && !(userDto.getName().isBlank())) {
             user.setName(userDto.getName());

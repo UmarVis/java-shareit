@@ -13,5 +13,5 @@ public interface UserRepository {
 
     User delete(Integer id);
 
-    void checkEmail(User user);
+    void checkEmail(User user, Integer id);
 }
