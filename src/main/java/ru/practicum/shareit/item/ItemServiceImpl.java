@@ -7,7 +7,7 @@ import ru.practicum.shareit.exception.ItemException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ItemMapper mapper;
 
     @Override
     public List<ItemDto> getUserItems(Integer userId) {
-        userRepository.getById(userId);
+        userService.getById(userId);
         List<ItemDto> itemDtoList = itemRepository.getUserItems(userId).stream()
                 .map(mapper::makeItemDto).collect(Collectors.toList());
         log.info("User's with id: {} items: {}", userId, itemDtoList);
@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto create(Integer userId, ItemDto itemDto) {
-        userRepository.getById(userId);
+        userService.getById(userId);
         Item item = mapper.makeItem(itemDto);
         item.setOwner(userId);
         log.info("User's {} item created", userId);
