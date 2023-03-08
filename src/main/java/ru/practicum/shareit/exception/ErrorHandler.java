@@ -33,7 +33,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse badRequestException (final BadRequestException e) {
+    public ErrorResponse badRequestException(final BadRequestException e) {
         log.warn("Input data invalid {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
