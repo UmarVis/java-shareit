@@ -3,6 +3,8 @@ package ru.practicum.shareit.item.dto;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Item;
 
+import java.util.ArrayList;
+
 @Component
 public class ItemMapper {
     public ItemDto makeItemDto(Item item) {
@@ -10,6 +12,7 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
+                .comments(new ArrayList<CommentDto>())
                 .build();
     }
 
