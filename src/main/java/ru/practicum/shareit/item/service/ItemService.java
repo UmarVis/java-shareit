@@ -18,4 +18,5 @@ public interface ItemService {
 
     void delete(Integer id);
     CommentDto addComment(CommentDto commentDto, Integer userId, Integer itemId);
+
 }
