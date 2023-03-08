@@ -17,6 +17,7 @@ public interface ItemService {
     List<ItemDto> searchItem(String request);
 
     void delete(Integer id);
+
     CommentDto addComment(CommentDto commentDto, Integer userId, Integer itemId);
 
 }
