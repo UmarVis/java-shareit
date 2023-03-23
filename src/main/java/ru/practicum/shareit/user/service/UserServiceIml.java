@@ -2,33 +2,29 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import javax.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class UserServiceIml implements UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
 
     @Override
+    @Transactional
     public UserDto add(UserDto userDto) {
-        User user;
-        try {
-            user = userRepository.save(mapper.makeUser(userDto));
-        } catch (DataIntegrityViolationException e) {
-            throw new ValidationException("Пользователь с такой почтой уже есть");
-        }
+        User user = userRepository.save(mapper.makeUser(userDto));
         log.info("Пользователь с именем {} создан", user.getName());
         return mapper.makeUserDto(user);
     }
@@ -42,6 +38,7 @@ public class UserServiceIml implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto update(UserDto userDto, Integer id) {
         UserDto updateUser = getById(id);
         if (userDto.getName() != null && !(userDto.getName().isBlank())) {
@@ -51,11 +48,12 @@ public class UserServiceIml implements UserService {
             updateUser.setEmail(userDto.getEmail());
         }
         log.info("Полтьователь с ИД {} обновлен", id);
-        userRepository.save(mapper.makeUser(updateUser));
+        userRepository.save(mapper.makeUser(updateUser)); //TODO
         return updateUser;
     }
 
     @Override
+    @Transactional
     public UserDto delete(Integer id) {
         UserDto userDto = getById(id);
         userRepository.deleteById(id);

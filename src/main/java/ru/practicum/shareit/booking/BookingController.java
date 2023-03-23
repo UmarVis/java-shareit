@@ -6,6 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingDtoIn;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,7 +17,7 @@ public class BookingController {
 
     @PostMapping()
     public BookingDtoOut addBooking(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                    @RequestBody BookingDtoIn dtoIn) {
+                                    @RequestBody @Valid BookingDtoIn dtoIn) {
         return bookingService.addBooking(userId, dtoIn);
     }
 
@@ -30,18 +31,18 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public BookingDtoOut getById(@RequestHeader("X-Sharer-User-Id") Integer userId,
                                  @PathVariable Integer bookingId) {
-        return bookingService.getById(userId,bookingId);
+        return bookingService.getById(userId, bookingId);
     }
 
     @GetMapping()
     public List<BookingDtoOut> getAllByUser(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                            @RequestParam(required = false, defaultValue = "ALL") String state) {
+                                            @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getAllByUser(userId, state);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoOut> getAllByOwner(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                             @RequestParam(required = false, defaultValue = "ALL") String state) {
+                                             @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getAllByOwner(userId, state);
     }
 }

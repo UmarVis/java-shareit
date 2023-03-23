@@ -12,10 +12,11 @@ public class CommentMapper {
                 .id(comment.getId())
                 .text(comment.getText())
                 .created(comment.getCreated())
+                .authorName(comment.getAuthor().getName())
                 .build();
     }
 
-    public Comment makeComment(CommentDto cDto) {
+    public Comment makeComment(CommentDtoIn cDto) {
         return Comment.builder()
                 .text(cDto.getText())
                 .created(LocalDateTime.now())
