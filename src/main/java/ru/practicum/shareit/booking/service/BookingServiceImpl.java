@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
-    private final static Sort SORT_BY_START_DESC = Sort.by(Sort.Direction.DESC, "start");
+    private static final Sort SORT_BY_START_DESC = Sort.by(Sort.Direction.DESC, "start");
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemService itemService;
