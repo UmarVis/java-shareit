@@ -13,29 +13,28 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class ItemMapper {
-    private final BookingMapper bookingMapper;
     private final CommentMapper commentMapper;
 
-    public ItemDto makeItemDto(Item item) {
-        return ItemDto.builder().id(item.getId())
+    public ItemDtoOut makeItemDto(Item item) {
+        return ItemDtoOut.builder().id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .comments(item.getComments() != null ? toListCommentDto(item.getComments()) : null)
-                .lastBooking(item.getLastBooking() != null ? bookingMapper.makeBookingDtoShort(item.getLastBooking()) : null)
-                .nextBooking(item.getNextBooking() != null ? bookingMapper.makeBookingDtoShort(item.getNextBooking()) : null)
+                .lastBooking(item.getLastBooking() != null ? BookingMapper.makeBookingDtoShort(item.getLastBooking()) : null)
+                .nextBooking(item.getNextBooking() != null ? BookingMapper.makeBookingDtoShort(item.getNextBooking()) : null)
                 .build();
     }
 
-    public Item makeItem(ItemDto itemDto) {
-        return Item.builder().id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
+    public Item makeItem(ItemDtoIn itemDtoIn) {
+        return Item.builder().id(itemDtoIn.getId())
+                .name(itemDtoIn.getName())
+                .description(itemDtoIn.getDescription())
+                .available(itemDtoIn.getAvailable())
                 .build();
     }
 
-    public List<ItemDto> toListDto(List<Item> items) {
+    public List<ItemDtoOut> toListDto(List<Item> items) {
         return items.stream().map(this::makeItemDto).collect(Collectors.toList());
     }
 

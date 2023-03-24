@@ -40,7 +40,8 @@ public class UserServiceIml implements UserService {
     @Override
     @Transactional
     public UserDto update(UserDto userDto, Integer id) {
-        UserDto updateUser = getById(id);
+        User updateUser = userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("Пользователь с ИД " + id + " не найден"));
         if (userDto.getName() != null && !(userDto.getName().isBlank())) {
             updateUser.setName(userDto.getName());
         }
@@ -48,8 +49,7 @@ public class UserServiceIml implements UserService {
             updateUser.setEmail(userDto.getEmail());
         }
         log.info("Полтьователь с ИД {} обновлен", id);
-        userRepository.save(mapper.makeUser(updateUser)); //TODO
-        return updateUser;
+        return mapper.makeUserDto(updateUser);
     }
 
     @Override

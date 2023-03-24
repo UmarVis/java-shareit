@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Data
 @Builder
-public class ItemDto {
+public class ItemDtoOut {
     private Integer id;
     @NotBlank(groups = {Create.class})
     private String name;

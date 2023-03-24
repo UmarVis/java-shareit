@@ -14,7 +14,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoOut;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
@@ -25,7 +25,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +34,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemService itemService;
-    private final BookingMapper bookingMapper;
     private final UserMapper userMapper;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
@@ -46,18 +44,17 @@ public class BookingServiceImpl implements BookingService {
         User user = userMapper.makeUser(userService.getById(userId));
         Item item = itemRepository.findById(dtoIn.getItemId()).orElseThrow(() ->
                 new UserNotFoundException("Пользователь не найден"));
-        Booking booking = bookingMapper.makeBooking(dtoIn);
+        Booking booking = BookingMapper.makeBooking(dtoIn);
         if (item.getOwner().getId().equals(user.getId())) {
             throw new UserNotFoundException("Owner cant booking his own item");
         }
-        if (!item.getAvailable() || dtoIn.getStart().isAfter(dtoIn.getEnd())
-                || dtoIn.getStart().equals(dtoIn.getEnd())) {
+        if (!item.getAvailable() || !dtoIn.getStart().isBefore(dtoIn.getEnd())) {
             throw new BadRequestException("Item is not available");
         }
         booking.setBooker(user);
         booking.setStatus(Status.WAITING);
         booking.setItem(item);
-        return bookingMapper.makeBookingDtoOut(bookingRepository.save(booking));
+        return BookingMapper.makeBookingDtoOut(bookingRepository.save(booking));
     }
 
     @Override
@@ -75,7 +72,7 @@ public class BookingServiceImpl implements BookingService {
         } else {
             throw new BookingException("Only owner approves booking");
         }
-        return bookingMapper.makeBookingDtoOut(bookingRepository.save(booking));
+        return BookingMapper.makeBookingDtoOut(booking);
     }
 
     @Override
@@ -85,7 +82,7 @@ public class BookingServiceImpl implements BookingService {
         if (!booking.getBooker().getId().equals(userId) && !ownerCheck(userId, bookingId)) {
             throw new BookingException("User: " + userId + " not owns booking with id: " + bookingId);
         }
-        return bookingMapper.makeBookingDtoOut(booking);
+        return BookingMapper.makeBookingDtoOut(booking);
     }
 
     @Override
@@ -115,7 +112,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findAllByBookerIdAndStatusEquals(userId, Status.REJECTED, SORT_BY_START_DESC);
                 break;
         }
-        return toListBookingDto(bookings);
+        return BookingMapper.toListBookingDto(bookings);
     }
 
     @Override
@@ -145,7 +142,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findAllByItemOwnerAndStatusEquals(user, Status.REJECTED, SORT_BY_START_DESC);
                 break;
         }
-        return toListBookingDto(bookings);
+        return BookingMapper.toListBookingDto(bookings);
     }
 
     private Booking bookingOrException(Integer bookingId) {
@@ -154,7 +151,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private Boolean ownerCheck(Integer userId, Integer bookingId) {
-        List<ItemDto> listDto = itemService.getUserItems(userId);
+        List<ItemDtoOut> listDto = itemService.getUserItems(userId);
         Booking booking = bookingOrException(bookingId);
         if (!listDto.contains(itemService.getItem(booking.getItem().getId(), userId))) {
             return false;
@@ -168,9 +165,5 @@ public class BookingServiceImpl implements BookingService {
         } catch (Throwable e) {
             throw new BadRequestException("Unknown state: " + state);
         }
-    }
-
-    private List<BookingDtoOut> toListBookingDto(List<Booking> bookings) {
-        return bookings.stream().map(bookingMapper::makeBookingDtoOut).collect(Collectors.toList());
     }
 }
