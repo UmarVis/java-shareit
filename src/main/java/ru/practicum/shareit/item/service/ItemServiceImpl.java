@@ -43,8 +43,9 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("User с ИД " + userId + " не найден"));
         List<Item> items = itemRepository.findAllByOwnerOrderById(user);
-        loadLastBooking(items, LocalDateTime.now());
-        loadNextBooking(items, LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        loadLastBooking(items, now);
+        loadNextBooking(items, now);
         loadComments(items);
         log.info("Получены все вещи юзера с ИД {}", userId);
         return itemMapper.toListDto(items);
@@ -56,9 +57,10 @@ public class ItemServiceImpl implements ItemService {
                 new UserNotFoundException("User с ИД " + userId + " не найден"));
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
                 new ItemException("Вещь с ИД " + itemId + " не найдена"));
+        LocalDateTime now = LocalDateTime.now();
         if (item.getOwner().getId().equals(user.getId())) {
-            loadLastBooking(List.of(item), LocalDateTime.now());
-            loadNextBooking(List.of(item), LocalDateTime.now());
+            loadLastBooking(List.of(item), now);
+            loadNextBooking(List.of(item), now);
         }
         loadComments(List.of(item));
 
