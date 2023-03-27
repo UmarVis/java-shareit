@@ -5,9 +5,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
 import ru.practicum.shareit.Update;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentDtoIn;
+import ru.practicum.shareit.item.dto.ItemDtoIn;
+import ru.practicum.shareit.item.dto.ItemDtoOut;
+import ru.practicum.shareit.item.service.ItemService;
 
-import java.util.Collections;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -17,37 +21,42 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                          @RequestBody @Validated(Create.class) ItemDto itemDto) {
-        return itemService.create(userId, itemDto);
+    public ItemDtoOut create(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                             @RequestBody @Validated(Create.class) ItemDtoIn itemDtoIn) {
+        return itemService.create(userId, itemDtoIn);
     }
 
     @GetMapping("{id}")
-    public ItemDto getById(@PathVariable Integer id) {
-        return itemService.getById(id);
+    public ItemDtoOut getItem(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                              @PathVariable Integer id) {
+        return itemService.getItem(id, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getUserItems(@RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public List<ItemDtoOut> getUserItems(@RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemService.getUserItems(userId);
     }
 
     @PatchMapping("{id}")
-    public ItemDto update(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                          @RequestBody @Validated(Update.class) ItemDto itemDto, @PathVariable Integer id) {
-        return itemService.update(userId, itemDto, id);
+    public ItemDtoOut update(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                             @RequestBody @Validated(Update.class) ItemDtoIn itemDtoIn, @PathVariable Integer id) {
+        return itemService.update(userId, itemDtoIn, id);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam(name = "text") String word) {
-        if (word.isBlank()) {
-            return Collections.emptyList();
-        }
+    public List<ItemDtoOut> searchItem(@RequestParam(name = "text") String word) {
         return itemService.searchItem(word);
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable Integer id) {
         itemService.delete(id);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                                 @PathVariable Integer itemId,
+                                 @Valid @RequestBody CommentDtoIn commentDtoIn) {
+        return itemService.addComment(commentDtoIn, userId, itemId);
     }
 }

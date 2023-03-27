@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-public class ItemDto {
+public class ItemDtoIn {
     private Integer id;
     @NotBlank(groups = {Create.class})
     private String name;
@@ -17,4 +17,5 @@ public class ItemDto {
     private String description;
     @NotNull(groups = {Create.class})
     private Boolean available;
+    private Integer requestId;
 }
