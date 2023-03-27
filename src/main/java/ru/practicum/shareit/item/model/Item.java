@@ -34,6 +34,8 @@ public class Item {
     private Booking nextBooking;
     @Transient
     private Set<Comment> comments;
+    @Column(name = "request_id")
+    private Integer requester;
 
     @Override
     public String toString() {

@@ -53,12 +53,19 @@ public class ErrorHandler {
         return new ErrorResponse("Ошибка валидации: " + e.getMessage());
     }
 
-    /*@ExceptionHandler
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse notFoundHandler(final RequestNotFoundException e) {
+        log.warn("Error request not found {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(final Throwable e) {
         log.error("Произошла непредвиденная ошибка {}", e.getMessage());
         return new ErrorResponse(
                 "Произошла непредвиденная ошибка."
         );
-    }*/
+    }
 }

@@ -23,10 +23,22 @@ public class ItemRequest {
     @Column(name = "description")
     private String description;
     @ManyToOne
-    @JoinColumn(name = "requester_id", nullable = false)
+    @JoinColumn(name = "requester_id", referencedColumnName = "id", nullable = false)
     private User requester;
     @CreatedDate
+    @Column(name = "created")
     private LocalDateTime created;
     @Transient
     private Set<Item> items;
+
+    @Override
+    public String toString() {
+        return "ItemRequest{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", requester=" + requester +
+                ", created=" + created +
+                ", items=" + items +
+                '}';
+    }
 }

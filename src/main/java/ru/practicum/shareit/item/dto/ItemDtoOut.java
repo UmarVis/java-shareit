@@ -18,6 +18,7 @@ public class ItemDtoOut {
     private BookingDtoShortOut lastBooking;
     private BookingDtoShortOut nextBooking;
     private Integer owner;
+    private Integer requestId;
 
     @Data
     public static class BookingDtoOut {
