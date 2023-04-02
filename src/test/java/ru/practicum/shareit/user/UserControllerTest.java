@@ -94,4 +94,33 @@ public class UserControllerTest {
         mockMvc.perform(delete("/users/{id}", userDto.getId()))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void createUserValidTest() throws Exception {
+        UserDto userDtoValid = new UserDto(1, "testName", "testEmail");
+        when(userService.add(any()))
+                .thenReturn(userDtoValid);
+
+        mockMvc.perform(post("/users")
+                        .content(mapper.writeValueAsString(userDtoValid))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void updateValid() throws Exception {
+        UserDto updatedDtoValid = new UserDto(1, "updated", " ");
+
+        when(userService.update(any(), any()))
+                .thenReturn(updatedDtoValid);
+
+        mockMvc.perform(patch("/users/1")
+                        .content(mapper.writeValueAsString(updatedDtoValid))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }

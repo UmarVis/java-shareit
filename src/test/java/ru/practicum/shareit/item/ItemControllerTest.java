@@ -138,4 +138,33 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.authorName", is(commentDto.getAuthorName())))
                 .andExpect(jsonPath("$.created", is(notNullValue())));
     }
+
+    @Test
+    void createTestException() throws Exception {
+       ItemDtoIn dtoInBad = new ItemDtoIn(1, " ", "desc", true, 1);
+        when(itemService.create(anyInt(), any()))
+                .thenReturn(dtoOut);
+
+        mockMvc.perform(post("/items")
+                        .header("X-Sharer-User-Id", 1)
+                        .content(objectMapper.writeValueAsString(dtoInBad))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void addCommentTestValid() throws Exception {
+        CommentDtoIn commentDtoInValid = new CommentDtoIn(" ");
+        when(itemService.addComment(any(), anyInt(), anyInt()))
+                .thenReturn(commentDto);
+
+        mockMvc.perform(post("/items/{itemId}/comment", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .content(objectMapper.writeValueAsString(commentDtoInValid))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }

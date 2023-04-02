@@ -99,4 +99,30 @@ public class ItemRequestControllerTest {
                 .andExpect(jsonPath("$[0].description", is(dtoOut.getDescription())))
                 .andExpect(jsonPath("$[0].items.size()", is(dtoOut.getItems().size())));
     }
+
+    @Test
+    void createTestValid() throws Exception {
+        ItemRequestDtoIn dtoInValid = new ItemRequestDtoIn(" ");
+        when(requestService.create(anyInt(), any()))
+                .thenReturn(dtoOut);
+
+        mockMvc.perform(post("/requests")
+                        .header("X-Sharer-User-Id", 1)
+                        .content(objectMapper.writeValueAsString(dtoInValid))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getAllValidTest() throws Exception {
+        when(requestService.getAll(anyInt(), anyInt(), anyInt()))
+                .thenReturn(List.of(dtoOut));
+
+        mockMvc.perform(get("/requests/all")
+                        .header("X-Sharer-User-Id", 1)
+                        .param("from", "-1")
+                        .param("size", "1"))
+                .andExpect(status().is5xxServerError());
+    }
 }

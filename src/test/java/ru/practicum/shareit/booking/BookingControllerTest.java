@@ -9,13 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,9 +34,6 @@ public class BookingControllerTest {
 
     private final LocalDateTime now = LocalDateTime.now();
     private final BookingDtoIn bookingDtoIn = new BookingDtoIn(1, now.plusHours(1), now.plusHours(5));
-    private final User user = new User(1, "name", "user@email.ru");
-    private final Item item = new Item(1, "name", "desc", null, user, null,
-            null, Set.of(), 1);
     private final BookingDtoOut bookingDtoOut = new BookingDtoOut(1, now, now.plusHours(1), Status.APPROVED,
             new BookingDtoOut.ItemDto(1, "name"), new BookingDtoOut.UserDto(1, "name"));
 
@@ -132,5 +126,36 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$[0].item.id", is(bookingDtoOut.getItem().getId()), Integer.class))
                 .andExpect(jsonPath("$[0].booker.name", is(bookingDtoOut.getItem().getName())));
 
+    }
+
+    @Test
+    void getAllByUserException() throws Exception {
+        when(bookingService.getAllByUser(anyInt(), any(), anyInt(), anyInt()))
+                .thenReturn(List.of(bookingDtoOut));
+
+        mockMvc.perform(get("/bookings")
+                        .header("X-Sharer-User-Id", 1)
+                        .param("state", "ALL")
+                        .param("from", "-1")
+                        .param("size", "0")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    void addBookingTestException() throws Exception {
+        BookingDtoIn bookingDtoInBad = new BookingDtoIn(1, now.minusHours(1), now.plusHours(5));
+        when(bookingService.addBooking(anyInt(), any()))
+                .thenReturn(bookingDtoOut);
+
+        mockMvc.perform(post("/bookings")
+                        .header("X-Sharer-User-Id", 1)
+                        .content(objectMapper.writeValueAsString(bookingDtoInBad))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
