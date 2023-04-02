@@ -1,14 +1,18 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.booking.dto.BookingDtoShortOut;
+import lombok.NoArgsConstructor;
+import ru.practicum.shareit.booking.BookingDtoShortOut;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemDtoOut {
     private Integer id;
     private String name;

@@ -10,7 +10,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.ItemException;
 import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;

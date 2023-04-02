@@ -1,7 +1,9 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.Create;
 
 import javax.validation.constraints.NotBlank;
@@ -9,6 +11,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemDtoIn {
     private Integer id;
     @NotBlank(groups = {Create.class})

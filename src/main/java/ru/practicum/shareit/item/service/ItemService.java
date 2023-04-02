@@ -1,9 +1,9 @@
 package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.CommentDtoIn;
-import ru.practicum.shareit.item.dto.ItemDtoIn;
-import ru.practicum.shareit.item.dto.ItemDtoOut;
+import ru.practicum.shareit.item.CommentDto;
+import ru.practicum.shareit.item.CommentDtoIn;
+import ru.practicum.shareit.item.ItemDtoIn;
+import ru.practicum.shareit.item.ItemDtoOut;
 
 import java.util.List;
 

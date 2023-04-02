@@ -2,7 +2,7 @@ package ru.practicum.shareit.request.dto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.time.LocalDateTime;
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RequestMapper {
     private final ItemMapper itemMapper;
+
     public ItemRequest makeItemRequest(ItemRequestDtoIn itemRequestDtoIn) {
         return ItemRequest.builder()
                 .description(itemRequestDtoIn.getDescription())

@@ -19,14 +19,13 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserMapper mapper;
 
     @Override
     @Transactional
     public UserDto add(UserDto userDto) {
-        User user = userRepository.save(mapper.makeUser(userDto));
+        User user = userRepository.save(UserMapper.makeUser(userDto));
         log.info("Пользователь с именем {} создан", user.getName());
-        return mapper.makeUserDto(user);
+        return UserMapper.makeUserDto(user);
     }
 
     @Override
@@ -34,7 +33,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("Пользователь с ИД " + id + " не найден"));
         log.info("Получен пользователь с ИД {}", id);
-        return mapper.makeUserDto(user);
+        return UserMapper.makeUserDto(user);
     }
 
     @Override
@@ -49,7 +48,7 @@ public class UserServiceImpl implements UserService {
             updateUser.setEmail(userDto.getEmail());
         }
         log.info("Полтьователь с ИД {} обновлен", id);
-        return mapper.makeUserDto(updateUser);
+        return UserMapper.makeUserDto(updateUser);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        return userRepository.findAll().stream().map(mapper::makeUserDto).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(UserMapper::makeUserDto).collect(Collectors.toList());
     }
 }
 

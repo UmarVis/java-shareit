@@ -36,15 +36,4 @@ public class Item {
     private Set<Comment> comments;
     @Column(name = "request_id")
     private Integer requester;
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", available=" + available +
-                ", owner=" + owner +
-                '}';
-    }
 }

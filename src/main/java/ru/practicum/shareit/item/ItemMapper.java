@@ -1,8 +1,8 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 
@@ -54,7 +54,7 @@ public class ItemMapper {
                 .build();
     }
 
-    private Set<CommentDto> toListCommentDto(Set<Comment> comments) {
+    public Set<CommentDto> toListCommentDto(Set<Comment> comments) {
         return comments.stream().map(commentMapper::makeCommentDto).collect(Collectors.toSet());
     }
 }

@@ -6,17 +6,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.dto.BookingDtoIn;
-import ru.practicum.shareit.booking.dto.BookingDtoOut;
-import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.BookingDtoIn;
+import ru.practicum.shareit.booking.BookingDtoOut;
+import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.BookingException;
+import ru.practicum.shareit.exception.ItemException;
 import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.item.dto.ItemDtoOut;
+import ru.practicum.shareit.item.ItemDtoOut;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
@@ -36,16 +37,15 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemService itemService;
-    private final UserMapper userMapper;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
     @Override
     @Transactional
     public BookingDtoOut addBooking(Integer userId, BookingDtoIn dtoIn) {
-        User user = userMapper.makeUser(userService.getById(userId));
+        User user = UserMapper.makeUser(userService.getById(userId));
         Item item = itemRepository.findById(dtoIn.getItemId()).orElseThrow(() ->
-                new UserNotFoundException("Пользователь не найден"));
+                new ItemException("Вещь не найдена"));
         Booking booking = BookingMapper.makeBooking(dtoIn);
         if (item.getOwner().getId().equals(user.getId())) {
             throw new UserNotFoundException("Owner cant booking his own item");

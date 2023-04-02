@@ -30,15 +30,4 @@ public class ItemRequest {
     private LocalDateTime created;
     @Transient
     private Set<Item> items;
-
-    @Override
-    public String toString() {
-        return "ItemRequest{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", requester=" + requester +
-                ", created=" + created +
-                ", items=" + items +
-                '}';
-    }
 }
