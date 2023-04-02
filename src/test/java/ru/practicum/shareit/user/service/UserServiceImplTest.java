@@ -70,9 +70,9 @@ public class UserServiceImplTest {
     void getAllTestEmptyList() {
         when(userRepository.findAll()).thenReturn(List.of());
 
-        List<UserDto> AllDtoUsers = userService.getAll();
+        List<UserDto> allDtoUsers = userService.getAll();
 
-        assertTrue(AllDtoUsers.isEmpty());
+        assertTrue(allDtoUsers.isEmpty());
     }
 
     @Test
