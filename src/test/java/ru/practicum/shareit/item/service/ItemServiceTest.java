@@ -17,7 +17,6 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
@@ -66,10 +65,9 @@ public class ItemServiceTest {
     private final Item item = new Item(1, "name", "desc", true, user, null,
             null, null, 2);
     private final Comment comment = new Comment(1, "text", item, user, now);
-    private final CommentDto commentDto = new CommentDto(1, "text", "autor", now);
+    private final CommentDto commentDto = new CommentDto(1, "text", "author", now);
     private final CommentDtoIn commentDtoIn = new CommentDtoIn("text");
     BookingDtoShortOut lastBooking = new BookingDtoShortOut(1, now, now.plusHours(1), 1);
-    private final ItemRequestDtoOut itemRequestDtoOut = new ItemRequestDtoOut(1, "desc", now, null);
     private final ItemDtoOut itemDtoOut = new ItemDtoOut(1, "name", "description", true,
             Set.of(commentDto), lastBooking, null, 1, 1);
     private final Booking booking = new Booking(1, item, user, now, now.plusHours(1), Status.APPROVED);
@@ -130,7 +128,6 @@ public class ItemServiceTest {
     @Test
     void getUserItemUserExceptionTest() throws Exception {
         when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
-        ;
 
         UserNotFoundException e = assertThrows(UserNotFoundException.class, () -> itemService.getUserItems(user.getId()));
 
@@ -258,7 +255,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void CommentUserExceptionTest() throws Exception {
+    void commentUserExceptionTest() throws Exception {
         when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         ItemException e = assertThrows(ItemException.class, () -> itemService.addComment(commentDtoIn, 1, 1));
@@ -267,7 +264,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void CommentItemExceptionTest() throws Exception {
+    void commentItemExceptionTest() throws Exception {
         when(itemRepository.findById(anyInt())).thenReturn(Optional.of(item));
         when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
 
@@ -278,7 +275,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void CommentEmpty() throws Exception {
+    void commentEmpty() throws Exception {
         when(itemRepository.findById(anyInt())).thenReturn(Optional.of(item));
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
         when(bookingRepository.findAllByBookerAndItemAndStatusEqualsAndEndBefore(any(), any(), any(), any()))

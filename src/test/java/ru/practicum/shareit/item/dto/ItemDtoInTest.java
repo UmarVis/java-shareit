@@ -15,7 +15,7 @@ public class ItemDtoInTest {
     JacksonTester<ItemDtoIn> jacksonTester;
 
     @Test
-    void ItemDtoInTest() throws Exception {
+    void dtoInTest() throws Exception {
 
         ItemDtoIn itemDtoIn = new ItemDtoIn(1, "name", "description", true, 1);
 

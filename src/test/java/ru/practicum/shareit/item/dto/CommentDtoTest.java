@@ -17,7 +17,7 @@ public class CommentDtoTest {
     JacksonTester<CommentDto> jacksonTester;
 
     @Test
-    void CommentDtoTest() throws Exception {
+    void dtoTest() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         CommentDto commentDto = new CommentDto(1, "text", "name", now);
 

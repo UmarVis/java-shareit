@@ -18,7 +18,7 @@ public class ItemDtoOutTest {
     JacksonTester<ItemDtoOut> jacksonTester;
 
     @Test
-    void ItemDtoOutTest() throws Exception {
+    void dtoOutTest() throws Exception {
         LocalDateTime now = LocalDateTime.now();
         BookingDtoShortOut lastBooking = new BookingDtoShortOut(1, now, now.plusHours(1), 2);
         ItemDtoOut itemDtoOut = new ItemDtoOut(1, "name", "description", true, null,

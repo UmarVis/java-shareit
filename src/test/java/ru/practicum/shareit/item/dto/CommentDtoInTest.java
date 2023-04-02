@@ -15,7 +15,7 @@ public class CommentDtoInTest {
     JacksonTester<CommentDtoIn> jacksonTester;
 
     @Test
-    void CommentDtoInTest() throws Exception {
+    void dtoInTest() throws Exception {
         CommentDtoIn commentDtoIn = new CommentDtoIn("text");
 
         JsonContent<CommentDtoIn> result = jacksonTester.write(commentDtoIn);
