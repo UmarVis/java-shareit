@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class UserServiceImplTest {
     @InjectMocks
     UserServiceImpl userService;
 
-    private final User user = new User(1, "nameTest", "emailTest@mail.ru");
     private final UserDto userDto = new UserDto(1, "nameDtoTest", "emailDtoTest@mail.ru");
 
     @Test
@@ -61,11 +59,11 @@ public class UserServiceImplTest {
     void getAllTestOk() {
         when(userRepository.findAll()).thenReturn(List.of(UserMapper.makeUser(userDto)));
 
-        List<UserDto> AllDtoUsers = userService.getAll();
+        List<UserDto> allDtoUsers = userService.getAll();
 
-        assertFalse(AllDtoUsers.isEmpty());
-        assertEquals(1, AllDtoUsers.size());
-        assertEquals(userDto, AllDtoUsers.get(0));
+        assertFalse(allDtoUsers.isEmpty());
+        assertEquals(1, allDtoUsers.size());
+        assertEquals(userDto, allDtoUsers.get(0));
     }
 
     @Test
