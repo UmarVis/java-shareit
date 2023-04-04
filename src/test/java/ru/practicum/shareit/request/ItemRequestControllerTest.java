@@ -123,6 +123,6 @@ public class ItemRequestControllerTest {
                         .header("X-Sharer-User-Id", 1)
                         .param("from", "-1")
                         .param("size", "1"))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
     }
 }

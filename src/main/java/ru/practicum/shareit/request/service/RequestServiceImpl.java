@@ -79,9 +79,9 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private void fillItems(List<ItemRequest> requestList) {
-        Map<Integer, List<ItemRequest>> requestById = requestList.stream().collect(groupingBy(ItemRequest::getId));
+        List<Integer> requestIds = requestList.stream().map(ItemRequest::getId).collect(Collectors.toList());
 
-        Map<Integer, Set<Item>> items = itemRepository.findAllByRequesterIn(requestById.keySet())
+        Map<Integer, Set<Item>> items = itemRepository.findAllByRequesterIn(requestIds)
                 .stream()
                 .collect(groupingBy(Item::getRequester, toSet()));
 
