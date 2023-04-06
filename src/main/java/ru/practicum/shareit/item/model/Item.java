@@ -34,15 +34,6 @@ public class Item {
     private Booking nextBooking;
     @Transient
     private Set<Comment> comments;
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", available=" + available +
-                ", owner=" + owner +
-                '}';
-    }
+    @Column(name = "request_id")
+    private Integer requester;
 }

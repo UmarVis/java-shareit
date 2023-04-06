@@ -6,7 +6,9 @@ import org.springframework.data.repository.query.Param;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
     List<Item> findAllByOwnerOrderById(User user);
@@ -15,4 +17,5 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
             "lower(i.description) LIKE lower(CONCAT('%',:word,'%') ) AND i.available = true )")
     List<Item> findItemByText(@Param("word") String word);
 
+    Set<Item> findAllByRequesterIn(Collection<Integer> requester);
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
+
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
@@ -53,12 +55,26 @@ public class ErrorHandler {
         return new ErrorResponse("Ошибка валидации: " + e.getMessage());
     }
 
-    /*@ExceptionHandler
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse notFoundHandler(final RequestNotFoundException e) {
+        log.warn("Error request not found {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse notFoundHandler(final ConstraintViolationException e) {
+        log.warn("Validate exception {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(final Throwable e) {
         log.error("Произошла непредвиденная ошибка {}", e.getMessage());
         return new ErrorResponse(
                 "Произошла непредвиденная ошибка."
         );
-    }*/
+    }
 }

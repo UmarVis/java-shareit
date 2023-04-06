@@ -23,9 +23,10 @@ public class ItemRequest {
     @Column(name = "description")
     private String description;
     @ManyToOne
-    @JoinColumn(name = "requester_id", nullable = false)
+    @JoinColumn(name = "requester_id", referencedColumnName = "id", nullable = false)
     private User requester;
     @CreatedDate
+    @Column(name = "created")
     private LocalDateTime created;
     @Transient
     private Set<Item> items;
