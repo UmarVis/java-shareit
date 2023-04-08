@@ -25,27 +25,27 @@ public class ItemClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> create (ItemDtoIn itemDtoIn, Integer userId) {
+    public ResponseEntity<Object> create(ItemDtoIn itemDtoIn, Integer userId) {
         return post("", userId, itemDtoIn);
     }
 
-    public ResponseEntity<Object> getItem (Integer itemId, Integer userId) {
+    public ResponseEntity<Object> getItem(Integer itemId, Integer userId) {
         return get("/" + itemId, userId);
     }
 
-    public ResponseEntity<Object> getUserItems (Integer userId) {
+    public ResponseEntity<Object> getUserItems(Integer userId) {
         return get("", userId);
     }
 
-    public ResponseEntity<Object> updateItem (ItemDtoIn itemDtoIn, Integer id, Integer userId) {
+    public ResponseEntity<Object> updateItem(ItemDtoIn itemDtoIn, Integer id, Integer userId) {
         return patch("/" + id, userId, itemDtoIn);
     }
 
-    public ResponseEntity<Object> searchItem (String word) {
+    public ResponseEntity<Object> searchItem(String word) {
         return get("/search?text=" + word);
     }
 
-    public void delete (Integer id) {
+    public void delete(Integer id) {
         get("/" + id);
     }
 
