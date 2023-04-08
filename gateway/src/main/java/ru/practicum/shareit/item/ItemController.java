@@ -2,7 +2,6 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ import ru.practicum.shareit.validate.Update;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Validated
@@ -44,16 +43,16 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> searchItem(@RequestParam(name = "text", defaultValue = "") String word) {
+    public ResponseEntity<Object> searchItem(@RequestParam(name = "text") String word) {
         if (word.isBlank()) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            return ResponseEntity.ok(List.of());
         }
         log.info("Поиск вещей со словом {}", word);
         return itemClient.searchItem(word);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Object> update(@RequestHeader("X-Sharer-User-Id") @NotNull Integer userId,
+    public ResponseEntity<Object> update(@RequestHeader("X-Sharer-User-Id") Integer userId,
                                          @RequestBody @Validated(Update.class) ItemDtoIn itemDtoIn, @PathVariable Integer id) {
         log.info("Обновлена вещь с ИД {} с описанием {} с юзер ИД {}", id, itemDtoIn.getDescription(), userId);
         return itemClient.updateItem(itemDtoIn, id, userId);

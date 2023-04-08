@@ -27,6 +27,13 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse badRequestBooking(final BookingException e) {
+        log.warn("Error conflict data {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse badRequestHandler(final MethodArgumentNotValidException e) {
         log.warn("Bad request {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
